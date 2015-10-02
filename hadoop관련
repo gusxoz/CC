@@ -1,6 +1,6 @@
 자바 설치 및 hadoop 다운로드 및 인스톨
 
-    yum -y update
+    yum -y update               //su를 실행할때 입력. su란 슈퍼유저 계정으로 관리자 계정이라 생각하면됨
     yum install wget  # wget 설치가 되어있지 않은 경우에 실행
     systemctl stop firewalld  # 방화벽 해제가 필요한 경우에 실행
 [ yum을 이용하여 Chrome 브라우저 설치 ] # 웹브라우저 설치가 필요한 경우에 실행
@@ -45,9 +45,9 @@ arch명령어를 통해 비트수 확인 후 설치
 
 
     cd ~/Downloads/
-    tar –zxvf jdk-8u5-linux-x64.tar.gz
+    tar –zxvf jdk-8u5-linux-x64.tar.gz        //파일 이름을 다운받은 파일로
     mkdir /usr/java
-    mv jdk1.8.0_05 /usr/java/jdk1.8
+    mv jdk1.8.0_05 /usr/java/jdk1.8           //파일 이름을 다운받은 파일로
 
     vi /etc/profile
 
