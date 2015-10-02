@@ -1,6 +1,6 @@
 자바 설치 및 hadoop 다운로드 및 인스톨
 
-    yum -y update               //su를 실행할때 입력. su란 슈퍼유저 계정으로 관리자 계정이라 생각하면됨
+    yum -y update
     yum install wget  # wget 설치가 되어있지 않은 경우에 실행
     systemctl stop firewalld  # 방화벽 해제가 필요한 경우에 실행
 [ yum을 이용하여 Chrome 브라우저 설치 ] # 웹브라우저 설치가 필요한 경우에 실행
@@ -45,18 +45,19 @@ arch명령어를 통해 비트수 확인 후 설치
 
 
     cd ~/Downloads/
-    tar –zxvf jdk-8u5-linux-x64.tar.gz        //파일 이름을 다운받은 파일로
+    tar –zxvf jdk-8u5-linux-x64.tar.gz
     mkdir /usr/java
-    mv jdk1.8.0_05 /usr/java/jdk1.8           //파일 이름을 다운받은 파일로
+    mv jdk1.8.0_05 /usr/java/jdk1.8
 
     vi /etc/profile
 
-    밑에 추가
+    밑에 export 3줄만 추가
 
     export JAVA_HOME=/usr/java/jdk1.8
     export PATH=$JAVA_HOME/bin:$PATH
     export CLASSPATH=$CLASSPATH:$JAVA_HOME/jre/lib/ext:$JAVA_HOME/lib/tools.jar
 
+    # 실행
     source /etc/profile
 2. 계정 추가
     # SSH 설치 및 공개 키 설정 
@@ -80,7 +81,9 @@ arch명령어를 통해 비트수 확인 후 설치
     wget http://apache.tt.co.kr/hadoop/common/hadoop-2.7.1/hadoop-2.7.1.tar.gz
     tar -zxvf hadoop-2.7.1.tar.gz
 5. 컨피규어링
-    $vi $HOME/.bashrc
+    vi $HOME/.bashrc
+
+    # 아래 11개 export 만 추가해주면 됨
     export JAVA_HOME=/usr/java/jdk1.8
     export HADOOP_CLASSPATH=${JAVA_HOME}/lib/tools.jar
     export HADOOP_HOME=/home/hadoop/hadoop-2.7.1
@@ -93,7 +96,8 @@ arch명령어를 통해 비트수 확인 후 설치
     export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
     export JAVA_LIBRARY_PATH=$HADOOP_HOME/lib/native:$JAVA_LIBRARY_PATH
 
-    $source $HOME/.bashrc
+    # 실행
+    source $HOME/.bashrc
 6. 설정값 추가하기
 connection connection
 
@@ -130,6 +134,7 @@ connection connection
             <value>file:///home/hadoop/hadoopdata/hdfs/datanode</value>
         </property>
     </configuration>         
+    # 실행
     cp $HADOOP_HOME/etc/hadoop/mapred-site.xml.template $HADOOP_HOME/etc/hadoop/mapred-site.xml
     # (잡트래커와 테스크트래커와 같은 맵리듀스 데몬을 위한 환경 설정 구성)
     vi  $HADOOP_HOME/etc/hadoop/mapred-site.xml
@@ -146,6 +151,7 @@ connection connection
         <name>yarn.nodemanager.aux-services</name>
         <value>mapreduce_shuffle</value>
     </property>
+    # 실행
     set JAVA_HOME
 7. 하둡시작
     hdfs namenode -format
@@ -157,8 +163,15 @@ connection connection
     localhost:8088   # 클러스터와 모든 어플리케이션 정보 확인
 9. word counting example
     # 테스트 문서 제작
-    vim test.txt   # 문장을 작성해서 넣어주면 됨(테스트용 문서를 옮겨놓고 사용해도 됨)
+    vim test.txt
 
+    # 아래 두줄을 test.txt 에 넣어주면 됨
+    # 테스트용 문서를 옮겨놓고 사용해도 됨)
+    i am a boy
+    you are a girl
+
+    hdfs dfs -mkdir /user   # user 디렉토리를 만듬 # exist directory 인 경우는 패스하면 됨
+    hdfs dfs -mkdir /user/hadoop   # hadoop 디렉토리를 만듬 # exist directory 인 경우는 패스하면 됨
     hdfs dfs -mkdir /user/hadoop/input   # input 디렉토리를 만듬
     hdfs dfs -put test.txt /user/hadoop/input   # test.txt 파일을 input 디렉토리에 넣음
 
@@ -172,7 +185,7 @@ connection connection
     jar -cf wc.jar WordCount*.class
 
     # Word Count 실행
-    hadoop jar wc.jar WordCount /input /output
+    hadoop jar wc.jar WordCount /user/hadoop/input /output
 
     # 기본 파일 명령어
     hadoop fs -ls /   # 모든 디렉토리 확인
